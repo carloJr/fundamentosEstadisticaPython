@@ -1,0 +1,136 @@
+<img src="https://svgshare.com/i/Swt.svg" height=75px>  
+#¡Muchas gracias por postular a Prey!  
+
+Aquí te dejamos un ejercicio para que demuestres todas tus capacidades a la hora de analizar data 📈. Este cargo no pretende que seas capaz de generar modelos de machine/deep learning, así que concéntrate únicamente en sacar buenas conclusiones.
+
+
+Lo que buscamos es alguien que pueda generar hipótesis y testearlas a través de experimentos. El desarrollo de los mismos será realizado por el equipo de Tecnología. Lo que se espera del cargo es que puedas:
+
+- Formular hipótesis (junto con el equipo) 🤝
+
+- Esclarecer qué variable se debe medir y ser capaz de obtenerla dentro de nuestras fuentes de datos 🤔
+
+- Monitorear el movimiento de las variables 🔎
+
+- Hacer análisis una vez terminado el experimento 🔬
+
+- Realizar pruebas estadísticas para validar tus conclusiones 👩‍🔬
+
+- Informar al resto del equipo completo el resultado del análisis de manera didáctica 📊
+
+- Repetir 🔁
+
+Esto es el grueso del trabajo, y como serás parte del equipo de Data-Intelligence, también tendrás la posibilidad de aportar desde tu conocimiento con ideas, análisis varios, modelos (si es parte de tu área de interés), generación de queries para necesidades particulares, y complementar el servicio de data con distintos desarrollos para todo el equipo.
+
+#El ejercicio:
+
+Te entregaremos acceso a una base de datos MySQL con distintas tablas que son una representación muy reducida de una de nuestras fuentes de datos. La idea es que la explores y nos entregues la información que logres extraer. Saca conclusiones, grafica y muéstranos tus habilidades.
+
+#Instrucciones:
+
+- **Crea una copia de este notebook en tu propio Google Drive y compártelo a patricio@preyhq.com una vez que termines**
+- Utiliza todas las librerías que encuentres pertinentes
+- Intenta no salirte del notebook (ni utilizar herramientas externas). Con Python y sus librerías es más que suficiente. Si aun así quieres utilizar otras herramientas como PowerBI, Tableau, Data Studio, etc., no hay problema. Puedes adjuntar las imágenes en una celda, pero realmente no es necesario.
+
+- **¡No hay restricciones en lo que quieras mostrar! Trata de no romperte la cabeza, solo queremos saber qué puedes aportar, conocer más sobre tus capacidades analíticas, de programación y ver qué podemos esperar de ti.**
+
+**¡ÉXITO!**
+
+
+
+
+!pip install sqlalchemy
+!pip install pymysql
+
+
+# Si no conoces esta librería eres libre de utilizar otra para la conexión
+from sqlalchemy import create_engine
+
+engine = create_engine('mysql+pymysql://analyst:^E!i@9DGf5DF@185.21.216.195:31737/db_test')
+
+# Descripción de base de datos:
+Todos los datos han sido generados de manera aleatoria pero manteniendo cierta cercanía (de manera muy simplificada) con la estructura de Prey.
+
+Una cuenta es la entidad mayor que puede tener un cliente, esta cuenta puede tener asociadas una o varias suscripciones, la suscripción es lo que paga el cliente. Una cuenta también puede tener uno o varios usuarios los cuales a su vez pueden tener uno o varios dispositivos asociados. Los dispositivos son los equipos móviles que protegen los clientes.
+
+##Tabla **subscriptions:**
+
+Prey es una empresa SaaS, por lo que nuestro modelo se basa en suscripciones. Esta tabla ejemplifica algunos datos de una suscripción:
+
+**id:** El id de una suscripción.
+
+**customer_id:** El id de un usuario.
+
+**plan:** El tipo de plan que podría comprar un usuario, con su intervalo de pago.
+
+**plan_quantity:** La cantidad de dispositivos que los usuarios están pagando para proteger.
+
+
+**plan_unit_price:** El valor de un dispositivo en USD.
+
+**plan_amount:** El valor total que paga un cliente por período de facturación en USD.
+
+**billing_period:** La frecuencia del período de pago.
+
+**billing_period_unit:** La unidad del período de pago.
+
+**status:** El estado de una suscripción.
+
+**created_at:** La fecha de creación de la suscripción.
+
+**cancelled_at:** La fecha de cancelación de una suscripción, si es que ya no está activa.
+
+**mrr:** El Monthly Recurrent Revenue de una suscripción (el pago según período normalizado a meses).
+
+
+##Tabla **accounts**:
+
+Esta tabla sirve como tabla intermedia para ver el id de una cuenta a través del id de un cliente.
+
+**account_id:** El id de la cuenta.
+
+**customer_id:** El id de un cliente (asociado a una suscripción).
+
+##Tabla **users**:
+
+Una cuenta puede tener varios usuarios asociados. Aquí podemos ver a qué país pertenece un usuario, cuando fue creado y si está activo o no.
+
+**id:** Id del usuario.
+
+**created_at:** Fecha de creación del usuario.
+
+**country_name:** País al que pertenece el usuario.
+
+**state:** Estado del usuario.
+
+**account_id:** Id de la cuenta a la que pertenece el usuario.
+
+##Tabla **devices**:
+
+Esta tabla muestra información sobre los dispositivos que una cuenta tiene asociados, esta asociación va por usuarios.
+
+**id:** El id del dispositivo.
+
+**user_id:** El id del usuario al que está asociado ese dispositivo.
+
+**created_at:** La fecha en la que se asoció el dispositivo a la cuenta.
+
+**type:** El tipo de dispositivo.
+
+**os:** El sistema operativo del dispositivo.
+
+**state:** El estado en el que se encuentra el dispositivo en relación a la cuenta. El estado missing corresponde a dispositivos que se marcaron como perdidos en el software.
+
+
+
+
+
+# You've got this! 💪
+
+import pandas as pd
+
+query = "select * from accounts;"
+df = pd.read_sql(query,engine)
+
+df.head()
+
