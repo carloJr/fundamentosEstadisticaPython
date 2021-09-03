@@ -1,0 +1,2 @@
+# fundamentosEstadisticaPython
+Curso de fundamentp
